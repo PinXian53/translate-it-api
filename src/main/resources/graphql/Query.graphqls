@@ -1,8 +1,10 @@
 type Query {
-    "取得專案"
+    "取得所有專案"
     project:[Project!]
-    "取得專案語言"
+    "取得專案語系"
     projectLanguage(projectOid :Oid):[ProjectLanguage!]
     "取得翻譯資料"
     translation(projectLanguageOid :Oid):[Translation!]
+    "取得所有語系"
+    language:[Language!]
 }
