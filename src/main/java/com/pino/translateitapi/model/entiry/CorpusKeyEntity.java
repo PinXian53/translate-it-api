@@ -14,7 +14,7 @@ public class CorpusKeyEntity {
     private Integer oid;
 
     @Column(name = "project_oid")
-    private String projectOid;
+    private Integer projectOid;
 
     @Column(name = "key")
     private String key;

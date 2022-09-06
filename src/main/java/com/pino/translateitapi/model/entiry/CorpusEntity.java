@@ -14,7 +14,7 @@ public class CorpusEntity {
     private Integer oid;
 
     @Column(name = "corpus_key_oid")
-    private String corpusKeyOid;
+    private Integer corpusKeyOid;
 
     @Column(name = "language_code")
     private String languageCode;

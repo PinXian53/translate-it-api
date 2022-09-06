@@ -4,7 +4,7 @@ type Corpus{
     "Key"
     key: String!
     "來源"
-    Source: String!
+    source: String!
     "翻譯內容"
     translation: String
 }

@@ -2,7 +2,7 @@ type Query {
     "取得專案"
     project:[Project!]
     "取得專案語言"
-    projectLanguage(projectId :Oid):[ProjectLanguage!]
+    projectLanguage(projectOid :Oid):[ProjectLanguage!]
     "取得語料"
-    corpus(projectLanguageId :Oid):[Corpus!]
+    corpus(projectLanguageOid :Oid):[Corpus!]
 }

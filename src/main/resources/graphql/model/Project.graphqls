@@ -8,5 +8,5 @@ type Project {
     "建立日期"
     createDateTime: Timestamp!
     "專案使用之語言"
-    projectLanguages: [ProjectLanguage!]
+    projectLanguage: [ProjectLanguage!]
 }

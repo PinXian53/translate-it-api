@@ -14,13 +14,13 @@ public class ProjectLanguageEntity {
     private Integer oid;
 
     @Column(name = "project_oid")
-    private String projectOid;
+    private Integer projectOid;
 
     @Column(name = "is_source")
     private Boolean isSource;
 
     @Column(name = "language_code")
-    private Boolean languageCode;
+    private String languageCode;
 
     @Column(name = "progress_rate")
     private Integer progressRate;
