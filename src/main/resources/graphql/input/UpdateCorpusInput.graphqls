@@ -1,0 +1,10 @@
+input UpdateTranslationInput{
+    "專案Oid"
+    projectOid:Oid!
+    "語系"
+    languageCode:String!
+    "Key"
+    key:String!
+    "翻譯內容"
+    translation:String!
+}

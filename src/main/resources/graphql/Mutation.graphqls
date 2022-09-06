@@ -1,0 +1,10 @@
+type Mutation {
+    "新增專案"
+    createProject(input: CreateProjectInput):Project
+    "新增翻譯資料(key)"
+    createTranslationKey(input: CreateTranslationKeyInput):String
+    "新增專案語系"
+    createProjectLanguage(input: CreateProjectLanguageInput): ProjectLanguage
+    "更新翻譯內容"
+    updateTranslation(input: UpdateTranslationInput): Translation
+}

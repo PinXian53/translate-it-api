@@ -1,0 +1,6 @@
+input CreateProjectLanguageInput{
+    "專案Oid"
+    projectOid:Oid!
+    "語系代碼"
+    languageCode:String!
+}
