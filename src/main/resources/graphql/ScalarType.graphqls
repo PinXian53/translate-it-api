@@ -1,0 +1,4 @@
+"時間戳(毫秒)"
+scalar Timestamp
+"識別碼(數字型態 ID)"
+scalar Oid

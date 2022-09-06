@@ -1,0 +1,10 @@
+type Corpus{
+    "Oid"
+    oid: Oid!
+    "Key"
+    key: String!
+    "來源"
+    Source: String!
+    "翻譯內容"
+    translation: String
+}

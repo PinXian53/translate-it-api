@@ -1,0 +1,12 @@
+type Project {
+    "Oid"
+    oid: Oid!
+    "專案名稱"
+    name: String!
+    "內容描述"
+    description: String
+    "建立日期"
+    createDateTime: Timestamp!
+    "專案使用之語言"
+    projectLanguages: [ProjectLanguage!]
+}

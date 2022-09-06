@@ -1,0 +1,12 @@
+type ProjectLanguage {
+    "Oid"
+    oid: Oid!
+    "是否為主要語言"
+    isSource: Boolean!
+    "語系代碼"
+    languageCode: LanguageCodeEnum!
+    "進度(%)"
+    progressRate: Int
+    "語料"
+    corpus: [Corpus!]
+}
