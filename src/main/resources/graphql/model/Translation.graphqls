@@ -1,4 +1,4 @@
-type Corpus{
+type Translation{
     "Oid"
     oid: Oid!
     "Key"
@@ -6,5 +6,5 @@ type Corpus{
     "來源"
     source: String!
     "翻譯內容"
-    translation: String
+    content: String
 }

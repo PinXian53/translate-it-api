@@ -1,9 +1,8 @@
 package com.pino.translateitapi.controller;
 
-import com.pino.translateitapi.dao.ProjectLanguageRepository;
 import com.pino.translateitapi.model.dto.Project;
 import com.pino.translateitapi.model.dto.ProjectLanguage;
-import com.pino.translateitapi.util.ModelMapperUtils;
+import com.pino.translateitapi.service.ProjectLanguageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
@@ -15,16 +14,15 @@ import java.util.List;
 @Controller
 public class ProjectLanguageController {
 
-    private final ProjectLanguageRepository projectLanguageRepository;
+    private final ProjectLanguageService projectLanguageService;
 
     @QueryMapping("projectLanguage")
     public List<ProjectLanguage> findProjectLanguage(Integer projectOid) {
-        return ModelMapperUtils.mapList(projectLanguageRepository.findByProjectOid(projectOid), ProjectLanguage.class);
+        return projectLanguageService.findProjectLanguage(projectOid);
     }
 
     @SchemaMapping
     public List<ProjectLanguage> projectLanguage(Project project) {
-        return ModelMapperUtils.mapList(projectLanguageRepository.findByProjectOid(project.getOid()),
-            ProjectLanguage.class);
+        return projectLanguageService.findProjectLanguage(project.getOid());
     }
 }

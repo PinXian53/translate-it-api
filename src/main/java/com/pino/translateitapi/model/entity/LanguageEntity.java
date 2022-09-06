@@ -1,4 +1,4 @@
-package com.pino.translateitapi.model.entiry;
+package com.pino.translateitapi.model.entity;
 
 import lombok.Data;
 

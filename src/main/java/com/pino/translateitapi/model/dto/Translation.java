@@ -5,7 +5,7 @@ import lombok.Data;
 
 @AllArgsConstructor
 @Data
-public class Corpus {
+public class Translation {
     /**
      * Oid
      */
@@ -21,5 +21,5 @@ public class Corpus {
     /**
      * 翻譯內容
      */
-    private String translation;
+    private String content;
 }

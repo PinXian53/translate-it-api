@@ -7,6 +7,6 @@ type ProjectLanguage {
     languageCode: String!
     "進度(%)"
     progressRate: Int
-    "語料"
-    corpus: [Corpus!]
+    "翻譯資料"
+    translation: [Translation!]
 }

@@ -1,4 +1,4 @@
-package com.pino.translateitapi.model.entiry;
+package com.pino.translateitapi.model.entity;
 
 import lombok.Data;
 
@@ -18,6 +18,9 @@ public class ProjectEntity {
 
     @Column(name = "description")
     private String description;
+
+    @Column(name = "source_language_code")
+    private String sourceLanguageCode;
 
     @Column(name = "create_date_time")
     private String createDateTime;
