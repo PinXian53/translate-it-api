@@ -35,6 +35,12 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.graphql-java/voyager-spring-boot-autoconfigure -->
+        <dependency>
+            <groupId>com.graphql-java</groupId>
+            <artifactId>voyager-spring-boot-autoconfigure</artifactId>
+            <version>5.0.2</version>
+        </dependency>
     </dependencies>
 
     <build>
