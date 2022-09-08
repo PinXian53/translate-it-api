@@ -28,9 +28,9 @@ public class ProjectService {
 
     public Pagination<Project> findProjectPage(Pageable pageable) {
         return PageUtils.toPagination(
-            PageUtils.convertContent(projectRepository.findAll(pageable),
-                o -> ModelMapperUtils.map(o, Project.class)
-            ), pageable
+            projectRepository.findAll(pageable),
+            pageable,
+            o -> ModelMapperUtils.map(o, Project.class)
         );
     }
 

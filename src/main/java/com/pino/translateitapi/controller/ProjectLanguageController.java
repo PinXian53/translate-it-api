@@ -1,9 +1,11 @@
 package com.pino.translateitapi.controller;
 
+import com.pino.translateitapi.model.dto.Pagination;
 import com.pino.translateitapi.model.dto.Project;
 import com.pino.translateitapi.model.dto.ProjectLanguage;
 import com.pino.translateitapi.model.dto.input.CreateProjectLanguageInput;
 import com.pino.translateitapi.service.ProjectLanguageService;
+import com.pino.translateitapi.util.PageUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
@@ -20,8 +22,16 @@ public class ProjectLanguageController {
     private final ProjectLanguageService projectLanguageService;
 
     @QueryMapping("projectLanguage")
-    public List<ProjectLanguage> findProjectLanguage(Integer projectOid) {
+    public List<ProjectLanguage> findProjectLanguage(@Argument Integer projectOid) {
         return projectLanguageService.findProjectLanguage(projectOid);
+    }
+
+    @QueryMapping("projectLanguagePage")
+    public Pagination<ProjectLanguage> findProjectLanguagePage(
+        @Argument Integer projectOid,
+        @Argument Integer pageNum,
+        @Argument Integer pageSize) {
+        return projectLanguageService.findProjectLanguagePage(projectOid, PageUtils.toPageable(pageNum, pageSize));
     }
 
     @SchemaMapping

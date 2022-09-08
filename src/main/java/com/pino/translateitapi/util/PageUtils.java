@@ -34,6 +34,10 @@ public class PageUtils {
         return new PageImpl<>(resultList, page.getPageable(), page.getTotalElements());
     }
 
+    public static <T, R> Pagination<R> toPagination(Page<T> page, Pageable pageable, Function<? super T, R> func) {
+        return toPagination(convertContent(page, func), pageable.getPageSize());
+    }
+
     public static <T> Pagination<T> toPagination(Page<T> page, Pageable pageable) {
         return toPagination(page, pageable.getPageSize());
     }

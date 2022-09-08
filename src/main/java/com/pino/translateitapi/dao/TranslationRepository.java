@@ -2,10 +2,10 @@ package com.pino.translateitapi.dao;
 
 import com.pino.translateitapi.model.dto.Translation;
 import com.pino.translateitapi.model.entity.TranslationEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-
-import java.util.List;
 
 public interface TranslationRepository extends JpaRepository<TranslationEntity, Integer> {
 
@@ -17,7 +17,11 @@ public interface TranslationRepository extends JpaRepository<TranslationEntity, 
         " left join TranslationEntity sourceTranslation " +
         " on translationKey.oid = sourceTranslation.translationKeyOid and sourceTranslation.languageCode = :sourceLanguageCode " +
         " where translationKey.projectOid = :projectOid ")
-    List<Translation> findByLanguageCode(Integer projectOid, String languageCode, String sourceLanguageCode);
+    Page<Translation> findByLanguageCode(
+        Integer projectOid,
+        String languageCode,
+        String sourceLanguageCode,
+        Pageable pageable);
 
     TranslationEntity findByTranslationKeyOidAndLanguageCode(Integer translationKeyOid, String languageCode);
 }

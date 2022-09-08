@@ -1,6 +1,7 @@
 package com.pino.translateitapi.config;
 
 import com.pino.translateitapi.util.TimeUtils;
+import graphql.language.IntValue;
 import graphql.schema.Coercing;
 import graphql.schema.GraphQLScalarType;
 import org.springframework.context.annotation.Bean;
@@ -57,7 +58,7 @@ public class GraphQLScalarTypeConfig {
 
             @Override
             public Integer parseLiteral(Object input) {
-                return (Integer) input;
+                return ((IntValue) input).getValue().intValue();
             }
         })
         .build();
