@@ -1,0 +1,6 @@
+type ProjectPage{
+    "資料"
+    data: [Project!]
+    "分頁資訊"
+    pageInfo: PageInfo
+}

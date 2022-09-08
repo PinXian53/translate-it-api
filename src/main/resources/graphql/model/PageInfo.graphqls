@@ -1,0 +1,13 @@
+"分頁資訊"
+type PageInfo{
+    "當前頁數，從 1 開始計數"
+    pageNum: Int!
+    "每頁資料筆數，預設為每頁 10 筆"
+    pageSize: Int!
+    "當前頁數所含資料筆數"
+    size: Int!
+    "資料總筆數"
+    total: Int!
+    "總頁數"
+    pages: Int!
+}
