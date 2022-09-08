@@ -3,6 +3,7 @@ package com.pino.translateitapi.model.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.time.OffsetDateTime;
 
 @Data
 @Entity
@@ -23,5 +24,10 @@ public class ProjectEntity {
     private String sourceLanguageCode;
 
     @Column(name = "create_date_time")
-    private String createDateTime;
+    private OffsetDateTime createDateTime;
+
+    @PrePersist
+    private void createDateTime() {
+        this.createDateTime = OffsetDateTime.now();
+    }
 }

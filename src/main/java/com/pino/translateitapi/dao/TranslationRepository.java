@@ -10,7 +10,7 @@ import java.util.List;
 public interface TranslationRepository extends JpaRepository<TranslationEntity, Integer> {
 
     @Query("select new com.pino.translateitapi.model.dto.Translation( " +
-        " translation.oid, translationKey.key, sourceTranslation.content, translation.content) " +
+        " translation.oid, translationKey.oid, translationKey.key, sourceTranslation.content, translation.content) " +
         " from TranslationKeyEntity translationKey " +
         " left join TranslationEntity translation " +
         " on translationKey.oid = translation.translationKeyOid and translation.languageCode = :languageCode " +
@@ -18,4 +18,6 @@ public interface TranslationRepository extends JpaRepository<TranslationEntity, 
         " on translationKey.oid = sourceTranslation.translationKeyOid and sourceTranslation.languageCode = :sourceLanguageCode " +
         " where translationKey.projectOid = :projectOid ")
     List<Translation> findByLanguageCode(Integer projectOid, String languageCode, String sourceLanguageCode);
+
+    TranslationEntity findByTranslationKeyOidAndLanguageCode(Integer translationKeyOid, String languageCode);
 }

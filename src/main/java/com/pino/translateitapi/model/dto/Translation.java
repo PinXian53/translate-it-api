@@ -11,6 +11,10 @@ public class Translation {
      */
     private Integer oid;
     /**
+     * Key Oid
+     */
+    private Integer translationKeyOid;
+    /**
      * key
      */
     private String key;
