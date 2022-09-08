@@ -1,6 +1,8 @@
 type Translation{
     "Oid"
     oid: Oid!
+    "Key Oid"
+    translationKeyOid: Oid!
     "Key"
     key: String!
     "來源"

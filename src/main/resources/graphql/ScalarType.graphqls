@@ -2,3 +2,5 @@
 scalar Timestamp
 "識別碼(數字型態 ID)"
 scalar Oid
+"內容一定為null"
+scalar Void
