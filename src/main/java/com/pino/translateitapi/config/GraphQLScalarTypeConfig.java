@@ -14,7 +14,7 @@ public class GraphQLScalarTypeConfig {
 
     @Bean
     public RuntimeWiringConfigurer runtimeWiringConfigurer() {
-        return wiringBuilder -> wiringBuilder.scalar(Timestamp).scalar(Oid);
+        return wiringBuilder -> wiringBuilder.scalar(Timestamp).scalar(Oid).scalar(Void);
     }
 
     public static final GraphQLScalarType Timestamp = GraphQLScalarType.newScalar()
@@ -49,13 +49,36 @@ public class GraphQLScalarTypeConfig {
             public Integer serialize(Object val) {
                 return (Integer) val;
             }
+
             @Override
             public Integer parseValue(Object input) {
                 return (Integer) input;
             }
+
             @Override
             public Integer parseLiteral(Object input) {
                 return (Integer) input;
+            }
+        })
+        .build();
+
+    public static final GraphQLScalarType Void = GraphQLScalarType.newScalar()
+        .name("Void")
+        .description("無回傳值")
+        .coercing(new Coercing<Void, Void>() {
+            @Override
+            public Void serialize(Object val) {
+                return null;
+            }
+
+            @Override
+            public Void parseValue(Object input) {
+                return null;
+            }
+
+            @Override
+            public Void parseLiteral(Object input) {
+                return null;
             }
         })
         .build();
