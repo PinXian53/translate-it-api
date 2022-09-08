@@ -1,3 +1,4 @@
+"專案語系"
 type ProjectLanguage {
     "Oid"
     oid: Oid!

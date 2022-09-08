@@ -1,6 +1,6 @@
 type Language{
     "語系代碼"
-    code:String!
+    code: String!
     "描述"
-    description:String
+    description: String
 }

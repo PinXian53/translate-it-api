@@ -1,0 +1,6 @@
+type TranslationPage{
+    "資料"
+    data: [Translation!]
+    "分頁資訊"
+    pageInfo: PageInfo
+}

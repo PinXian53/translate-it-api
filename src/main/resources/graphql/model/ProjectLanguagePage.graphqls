@@ -1,0 +1,6 @@
+type ProjectLanguagePage{
+    "資料"
+    data: [ProjectLanguage!]
+    "分頁資訊"
+    pageInfo: PageInfo
+}

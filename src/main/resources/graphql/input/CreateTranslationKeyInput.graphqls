@@ -1,8 +1,8 @@
 input CreateTranslationKeyInput{
     "專案Oid"
-    projectOid:Oid!
+    projectOid: Oid!
     "Key"
-    key:String!
+    key: String!
     "主語系翻譯內容"
-    sourceTranslation:String!
+    sourceTranslation: String!
 }

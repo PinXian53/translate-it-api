@@ -4,5 +4,5 @@ input CreateProjectInput{
     "內容描述"
     description: String
     "主要語系"
-    sourceLanguageCode:String!
+    sourceLanguageCode: String!
 }

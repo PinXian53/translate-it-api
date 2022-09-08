@@ -1,3 +1,4 @@
+"翻譯資料"
 type Translation{
     "Oid"
     oid: Oid!
@@ -6,7 +7,7 @@ type Translation{
     "Key"
     key: String!
     "來源"
-    source: String!
+    source: String
     "翻譯內容"
     content: String
 }

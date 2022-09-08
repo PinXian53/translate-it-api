@@ -1,12 +1,20 @@
 type Query {
+    "取得所有語系"
+    language: [Language!]
+
     "取得所有專案"
     project: [Project!]
     "取得所有專案(分頁)"
     projectPage(pageNum: Int, pageSize: Int): ProjectPage!
+
     "取得專案語系"
-    projectLanguage(projectOid: Oid): [ProjectLanguage!]
+    projectLanguage(projectOid: Oid!): [ProjectLanguage!]
+    "取得專案語系(分頁)"
+    projectLanguagePage(projectOid: Oid!, pageNum: Int, pageSize: Int): ProjectLanguagePage!
+
     "取得翻譯資料"
-    translation(projectLanguageOid: Oid): [Translation!]
-    "取得所有語系"
-    language: [Language!]
+    translation(projectLanguageOid: Oid!): [Translation!]
+    "取得翻譯資料(分頁)"
+    translationPage(projectLanguageOid: Oid!, pageNum: Int, pageSize: Int): TranslationPage!
+
 }

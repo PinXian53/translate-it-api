@@ -1,10 +1,10 @@
 type Mutation {
     "新增專案"
-    createProject(input: CreateProjectInput):Void
+    createProject(input: CreateProjectInput!): Void
     "新增翻譯資料(key)"
-    createTranslationKey(input: CreateTranslationKeyInput):Void
+    createTranslationKey(input: CreateTranslationKeyInput!): Void
     "新增專案語系"
-    createProjectLanguage(input: CreateProjectLanguageInput): Void
+    createProjectLanguage(input: CreateProjectLanguageInput!): Void
     "更新翻譯內容"
-    updateTranslation(input: UpdateTranslationInput): Void
+    updateTranslation(input: UpdateTranslationInput!): Void
 }
