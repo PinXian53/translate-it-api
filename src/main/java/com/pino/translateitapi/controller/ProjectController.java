@@ -1,8 +1,10 @@
 package com.pino.translateitapi.controller;
 
+import com.pino.translateitapi.model.dto.Pagination;
 import com.pino.translateitapi.model.dto.Project;
 import com.pino.translateitapi.model.dto.input.CreateProjectInput;
 import com.pino.translateitapi.service.ProjectService;
+import com.pino.translateitapi.util.PageUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
@@ -18,8 +20,13 @@ public class ProjectController {
     private final ProjectService projectService;
 
     @QueryMapping("project")
-    public List<Project> getAllProject() {
-        return projectService.getAllProject();
+    public List<Project> findProject() {
+        return projectService.findProject();
+    }
+
+    @QueryMapping("projectPage")
+    public Pagination<Project> findProjectPage(@Argument Integer pageNum, @Argument Integer pageSize) {
+        return projectService.findProjectPage(PageUtils.toPageable(pageNum, pageSize));
     }
 
     @MutationMapping

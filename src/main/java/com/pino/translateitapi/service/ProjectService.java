@@ -2,12 +2,15 @@ package com.pino.translateitapi.service;
 
 import com.pino.translateitapi.dao.ProjectLanguageRepository;
 import com.pino.translateitapi.dao.ProjectRepository;
+import com.pino.translateitapi.model.dto.Pagination;
 import com.pino.translateitapi.model.dto.Project;
 import com.pino.translateitapi.model.dto.input.CreateProjectInput;
 import com.pino.translateitapi.model.entity.ProjectEntity;
 import com.pino.translateitapi.model.entity.ProjectLanguageEntity;
 import com.pino.translateitapi.util.ModelMapperUtils;
+import com.pino.translateitapi.util.PageUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,8 +22,16 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final ProjectLanguageRepository projectLanguageRepository;
 
-    public List<Project> getAllProject() {
+    public List<Project> findProject() {
         return ModelMapperUtils.mapList(projectRepository.findAll(), Project.class);
+    }
+
+    public Pagination<Project> findProjectPage(Pageable pageable) {
+        return PageUtils.toPagination(
+            PageUtils.convertContent(projectRepository.findAll(pageable),
+                o -> ModelMapperUtils.map(o, Project.class)
+            ), pageable
+        );
     }
 
     public void createProject(CreateProjectInput createProjectInput) {
