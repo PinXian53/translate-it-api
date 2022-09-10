@@ -1,8 +1,26 @@
 package com.pino.translateitapi.service;
 
-public interface OnlineTranslationService {
+import com.pino.translateitapi.constant.OnlineTranslateEnum;
+import com.pino.translateitapi.exception.BadRequestException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
-    String translate(String content, String toLanguageCode);
+@RequiredArgsConstructor
+@Service
+public class OnlineTranslationService {
 
-    String translate(String content, String fromLanguageCode, String toLanguageCode);
+    private final AzureTranslationService azureTranslationService;
+
+    public String translate(
+        String content,
+        OnlineTranslateEnum onlineTranslateEnum,
+        String fromLanguageCode,
+        String toLanguageCode) {
+        OnlineTranslation onlineTranslation;
+        switch (onlineTranslateEnum) {
+            case AZURE -> onlineTranslation = azureTranslationService;
+            default -> throw new BadRequestException("無法識別的翻譯供應商");
+        }
+        return onlineTranslation.translate(content, fromLanguageCode, toLanguageCode);
+    }
 }

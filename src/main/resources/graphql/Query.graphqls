@@ -17,4 +17,6 @@ type Query {
     "取得翻譯資料(分頁)"
     translationPage(projectLanguageOid: Oid!, pageNum: Int, pageSize: Int): TranslationPage!
 
+    "線上翻譯"
+    onlineTranslate(content: String!, onlineTranslateEnum: OnlineTranslateEnum!, fromLanguageCode: String, toLanguageCode: String!): String
 }

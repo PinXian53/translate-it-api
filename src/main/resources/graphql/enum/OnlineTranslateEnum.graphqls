@@ -1,0 +1,5 @@
+"線上翻譯服務商"
+enum OnlineTranslateEnum{
+    "Microsoft Azure"
+    AZURE
+}

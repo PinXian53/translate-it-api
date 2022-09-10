@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-public class AzureTranslationService implements OnlineTranslationService {
+public class AzureTranslationService implements OnlineTranslation {
     @Value("${microsoft.azure.translate.key}")
     private String subscriptionKey;
     @Value("${microsoft.azure.translate.location}")
