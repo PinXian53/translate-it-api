@@ -19,4 +19,7 @@ public class LanguageEntity {
 
     @Column(name = "description")
     private String description;
+
+    @Column(name = "azure_code")
+    private String azureCode;
 }
