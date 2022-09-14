@@ -12,6 +12,7 @@ import com.pino.translateitapi.util.PageUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -35,8 +36,9 @@ public class ProjectService {
         );
     }
 
+    @Transactional
     public void createProject(CreateProjectInput createProjectInput) {
-        checkCreateProjectInput(createProjectInput);
+        validCreateProjectInput(createProjectInput);
         // 建立專案
         ProjectEntity projectEntity = ModelMapperUtils.map(createProjectInput, ProjectEntity.class);
         projectRepository.save(projectEntity);
@@ -48,7 +50,7 @@ public class ProjectService {
         projectLanguageRepository.save(projectLanguageEntity);
     }
 
-    private void checkCreateProjectInput(CreateProjectInput createProjectInput) {
+    private void validCreateProjectInput(CreateProjectInput createProjectInput) {
         languageService.validLanguageCode(createProjectInput.getSourceLanguageCode());
     }
 }
