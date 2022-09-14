@@ -1,8 +1,8 @@
 input CreateProjectInput{
-    "專案名稱"
+    "專案名稱 (max:50)"
     name: String!
-    "內容描述"
+    "內容描述 (max:200)"
     description: String
-    "主要語系"
+    "主要語系 (max:20)"
     sourceLanguageCode: String!
 }

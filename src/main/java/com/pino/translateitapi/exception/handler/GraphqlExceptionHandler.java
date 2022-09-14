@@ -11,9 +11,12 @@ import org.springframework.graphql.execution.DataFetcherExceptionResolverAdapter
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -27,8 +30,15 @@ public class GraphqlExceptionHandler extends DataFetcherExceptionResolverAdapter
             return toGraphQLError("系統發生錯誤，請稍後再試", e, env);
         } else if (e instanceof MaxUploadSizeExceededException) {
             return toGraphQLError("上傳的檔案大小超過 5 MB", e, env);
+        } else if (e instanceof ConstraintViolationException constraintviolationexception) {
+            // 資料有問題驗證不通過
+            String errorMessage = constraintviolationexception.getConstraintViolations()
+                .stream()
+                .map(ConstraintViolation::getMessage)
+                .collect(Collectors.joining(", "));
+            return toGraphQLError(errorMessage, e, env);
         }
-        return toGraphQLError("未知的錯誤", e, env);
+        return toGraphQLError("未知的錯誤，請稍後再試", e, env);
     }
 
     private GraphQLError toGraphQLError(String message, Throwable e, DataFetchingEnvironment env) {

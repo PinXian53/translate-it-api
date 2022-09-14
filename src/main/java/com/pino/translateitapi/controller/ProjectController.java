@@ -11,6 +11,7 @@ import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -30,7 +31,7 @@ public class ProjectController {
     }
 
     @MutationMapping
-    public void createProject(@Argument CreateProjectInput input) {
+    public void createProject(@Argument @Valid CreateProjectInput input) {
         projectService.createProject(input);
     }
 

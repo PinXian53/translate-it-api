@@ -19,6 +19,7 @@ import java.util.List;
 @Service
 public class ProjectService {
 
+    private final LanguageService languageService;
     private final ProjectRepository projectRepository;
     private final ProjectLanguageRepository projectLanguageRepository;
 
@@ -35,6 +36,7 @@ public class ProjectService {
     }
 
     public void createProject(CreateProjectInput createProjectInput) {
+        checkCreateProjectInput(createProjectInput);
         // 建立專案
         ProjectEntity projectEntity = ModelMapperUtils.map(createProjectInput, ProjectEntity.class);
         projectRepository.save(projectEntity);
@@ -44,5 +46,9 @@ public class ProjectService {
         projectLanguageEntity.setLanguageCode(createProjectInput.getSourceLanguageCode());
         projectLanguageEntity.setProgressRate(0);
         projectLanguageRepository.save(projectLanguageEntity);
+    }
+
+    private void checkCreateProjectInput(CreateProjectInput createProjectInput) {
+        languageService.validLanguageCode(createProjectInput.getSourceLanguageCode());
     }
 }

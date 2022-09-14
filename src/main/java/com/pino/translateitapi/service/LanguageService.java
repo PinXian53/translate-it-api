@@ -1,6 +1,7 @@
 package com.pino.translateitapi.service;
 
 import com.pino.translateitapi.dao.LanguageRepository;
+import com.pino.translateitapi.exception.BadRequestException;
 import com.pino.translateitapi.exception.InternalServerErrorException;
 import com.pino.translateitapi.model.dto.Language;
 import com.pino.translateitapi.util.ModelMapperUtils;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,6 +19,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class LanguageService {
     private final LanguageRepository languageRepository;
 
+    private final List<Language> languageList = new ArrayList<>();
+    private final List<String> languageCodeCache = new ArrayList<>();
     // Map<languageCode, azureCode>
     private final Map<String, String> azureCodeCache = new ConcurrentHashMap<>();
 
@@ -27,17 +31,30 @@ public class LanguageService {
 
     private void initCodeCache() {
         // 清除 Cache
+        languageCodeCache.clear();
         azureCodeCache.clear();
         // 載入 Cache
         languageRepository.findAll().forEach(languageEntity -> {
             String languageCode = languageEntity.getCode();
             String azureCode = languageEntity.getAzureCode();
+            languageList.add(ModelMapperUtils.map(languageEntity, Language.class));
+            languageCodeCache.add(languageCode);
             azureCodeCache.put(languageCode, azureCode);
         });
     }
 
     public List<Language> getAllLanguage() {
-        return ModelMapperUtils.mapList(languageRepository.findAll(), Language.class);
+        return languageList;
+    }
+
+    public void validLanguageCode(String languageCode) {
+        if (!isCorrectLanguageCode(languageCode)) {
+            throw new BadRequestException("無法識別的語系資料");
+        }
+    }
+
+    public boolean isCorrectLanguageCode(String languageCode) {
+        return languageCodeCache.contains(languageCode);
     }
 
     public String getAzureCodeCache(String languageCode) {
