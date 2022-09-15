@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "language", schema = "public")
+@Table(name = "language")
 public class LanguageEntity {
 
     @Id

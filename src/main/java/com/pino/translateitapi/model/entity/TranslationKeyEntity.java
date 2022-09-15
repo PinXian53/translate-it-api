@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "translation_key", schema = "public")
+@Table(name = "translation_key")
 public class TranslationKeyEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

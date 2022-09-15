@@ -7,7 +7,7 @@ import java.time.OffsetDateTime;
 
 @Data
 @Entity
-@Table(name = "project", schema = "public")
+@Table(name = "project")
 public class ProjectEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
