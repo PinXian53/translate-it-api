@@ -15,6 +15,7 @@ import com.pino.translateitapi.model.entity.TranslationKeyEntity;
 import com.pino.translateitapi.util.BatchUtils;
 import com.pino.translateitapi.util.PageUtils;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,7 +74,7 @@ public class TranslationService {
             translationEntity.setTranslationKeyOid(translationKeyOid);
             translationEntity.setLanguageCode(languageCode);
         }
-        translationEntity.setContent(content);
+        translationEntity.setContent(StringUtils.isEmpty(content) ? null : content.trim());
         translationRepository.save(translationEntity);
     }
 
