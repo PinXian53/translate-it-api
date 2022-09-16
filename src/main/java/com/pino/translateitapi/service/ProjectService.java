@@ -77,6 +77,7 @@ public class ProjectService {
 
     private ProjectEntity createProjectToDb(CreateProjectInput createProjectInput) {
         ProjectEntity projectEntity = ModelMapperUtils.map(createProjectInput, ProjectEntity.class);
+        projectEntity.setProgressRate(0); // default 0
         return projectRepository.save(projectEntity);
     }
 

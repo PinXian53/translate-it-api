@@ -26,6 +26,9 @@ public class ProjectEntity {
     @Column(name = "create_date_time")
     private OffsetDateTime createDateTime;
 
+    @Column(name = "progress_rate")
+    private Integer progressRate;
+
     @PrePersist
     private void createDateTime() {
         this.createDateTime = OffsetDateTime.now();

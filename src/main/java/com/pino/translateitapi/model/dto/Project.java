@@ -19,6 +19,10 @@ public class Project {
      */
     private String description;
     /**
+     * 進度(%)
+     */
+    private Integer progressRate;
+    /**
      * 建立日期
      */
     private OffsetDateTime createDateTime;

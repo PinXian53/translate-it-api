@@ -8,6 +8,8 @@ type Project {
     description: String
     "建立日期"
     createDateTime: Timestamp!
+    "進度(%)"
+    progressRate: Int
     "專案使用之語言"
     projectLanguage: [ProjectLanguage!]
 }
