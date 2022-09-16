@@ -85,7 +85,7 @@ public class ProjectService {
         projectLanguageRepository.save(projectLanguageEntity);
     }
 
-    private void validProjectOid(int projectOid) {
+    public void validProjectOid(int projectOid) {
         if (!projectRepository.existsByOid(projectOid)) {
             throw new BadRequestException("無法識別之專案");
         }

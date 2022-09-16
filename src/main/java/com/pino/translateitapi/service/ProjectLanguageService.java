@@ -20,6 +20,8 @@ import java.util.List;
 @Service
 public class ProjectLanguageService {
 
+    private final ProjectService projectService;
+
     private final ProjectRepository projectRepository;
     private final ProjectLanguageRepository projectLanguageRepository;
 
@@ -49,10 +51,16 @@ public class ProjectLanguageService {
         );
     }
 
+    @Transactional
     public void createProjectLanguage(CreateProjectLanguageInput createProjectLanguageInput) {
-        projectRepository.findByOid(createProjectLanguageInput.getProjectOid());
+        projectService.validProjectOid(createProjectLanguageInput.getProjectOid());
+        createProjectLanguageToDb(createProjectLanguageInput);
+    }
+
+    @Transactional
+    public void createProjectLanguageToDb(CreateProjectLanguageInput createProjectLanguageInput) {
         ProjectLanguageEntity entity = ModelMapperUtils.map(createProjectLanguageInput, ProjectLanguageEntity.class);
-        entity.setProgressRate(0); // 翻譯進度預設0
+        entity.setProgressRate(0); // default 0
         projectLanguageRepository.save(entity);
     }
 }
