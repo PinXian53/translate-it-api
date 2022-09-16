@@ -8,6 +8,8 @@ type ProjectLanguage {
     languageCode: String!
     "進度(%)"
     progressRate: Int
+    "是否啟用"
+    enable: Boolean!
     "翻譯資料"
     translation: [Translation!]
 }
