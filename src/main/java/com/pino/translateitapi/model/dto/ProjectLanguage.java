@@ -20,4 +20,8 @@ public class ProjectLanguage {
      * 進度(%)
      */
     private Integer progressRate;
+    /**
+     * 是否啟用
+     */
+    private boolean enable;
 }
