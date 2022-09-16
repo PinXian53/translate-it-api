@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProjectRepository extends JpaRepository<ProjectEntity, Integer> {
     ProjectEntity findByOid(Integer projectOid);
+
+    boolean existsByOid(int projectOid);
 }

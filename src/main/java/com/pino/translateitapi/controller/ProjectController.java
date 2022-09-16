@@ -3,6 +3,7 @@ package com.pino.translateitapi.controller;
 import com.pino.translateitapi.model.dto.Pagination;
 import com.pino.translateitapi.model.dto.Project;
 import com.pino.translateitapi.model.dto.input.CreateProjectInput;
+import com.pino.translateitapi.model.dto.input.UpdateProjectInput;
 import com.pino.translateitapi.service.ProjectService;
 import com.pino.translateitapi.util.PageUtils;
 import lombok.RequiredArgsConstructor;
@@ -33,6 +34,11 @@ public class ProjectController {
     @MutationMapping
     public void createProject(@Argument @Valid CreateProjectInput input) {
         projectService.createProject(input);
+    }
+
+    @MutationMapping
+    public void updateProject(@Argument int projectOid, @Argument @Valid UpdateProjectInput input) {
+        projectService.updateProject(projectOid, input);
     }
 
 }

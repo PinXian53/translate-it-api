@@ -2,9 +2,11 @@ package com.pino.translateitapi.service;
 
 import com.pino.translateitapi.dao.ProjectLanguageRepository;
 import com.pino.translateitapi.dao.ProjectRepository;
+import com.pino.translateitapi.exception.BadRequestException;
 import com.pino.translateitapi.model.dto.Pagination;
 import com.pino.translateitapi.model.dto.Project;
 import com.pino.translateitapi.model.dto.input.CreateProjectInput;
+import com.pino.translateitapi.model.dto.input.UpdateProjectInput;
 import com.pino.translateitapi.model.entity.ProjectEntity;
 import com.pino.translateitapi.model.entity.ProjectLanguageEntity;
 import com.pino.translateitapi.util.ModelMapperUtils;
@@ -39,10 +41,14 @@ public class ProjectService {
     @Transactional
     public void createProject(CreateProjectInput createProjectInput) {
         validCreateProjectInput(createProjectInput);
-        // 建立專案
         ProjectEntity projectEntity = createProjectToDb(createProjectInput);
-        // 建立主語系
         createProjectLanguageToDb(projectEntity.getOid(), createProjectInput.getSourceLanguageCode());
+    }
+
+    @Transactional
+    public void updateProject(int projectOid, UpdateProjectInput updateProjectInput) {
+        validProjectOid(projectOid);
+        updateProjectToDb(projectOid, updateProjectInput);
     }
 
     private void validCreateProjectInput(CreateProjectInput createProjectInput) {
@@ -60,5 +66,18 @@ public class ProjectService {
         projectLanguageEntity.setLanguageCode(languageCode);
         projectLanguageEntity.setProgressRate(0); // default 0
         projectLanguageRepository.save(projectLanguageEntity);
+    }
+
+    private void validProjectOid(int projectOid) {
+        if (!projectRepository.existsByOid(projectOid)) {
+            throw new BadRequestException("無法識別之專案");
+        }
+    }
+
+    private void updateProjectToDb(int projectOid, UpdateProjectInput createProjectInput) {
+        ProjectEntity projectEntity = projectRepository.findByOid(projectOid);
+        projectEntity.setName(createProjectInput.getName());
+        projectEntity.setDescription(createProjectInput.getDescription());
+        projectRepository.save(projectEntity);
     }
 }

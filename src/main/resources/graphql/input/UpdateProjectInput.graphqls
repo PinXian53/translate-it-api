@@ -1,0 +1,6 @@
+input UpdateProjectInput{
+    "專案名稱"
+    name: String!
+    "內容描述"
+    description: String
+}
