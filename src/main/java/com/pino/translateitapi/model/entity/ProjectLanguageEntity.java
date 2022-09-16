@@ -6,7 +6,7 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "project_language")
+@Table(name = "project_language", schema = "public")
 public class ProjectLanguageEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
