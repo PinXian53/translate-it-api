@@ -2,6 +2,7 @@ package com.pino.translateitapi.service;
 
 import com.pino.translateitapi.dao.ProjectLanguageRepository;
 import com.pino.translateitapi.dao.ProjectRepository;
+import com.pino.translateitapi.dao.TranslationKeyRepository;
 import com.pino.translateitapi.dao.TranslationRepository;
 import com.pino.translateitapi.model.dto.Pagination;
 import com.pino.translateitapi.model.dto.Translation;
@@ -9,6 +10,8 @@ import com.pino.translateitapi.model.dto.input.UpdateTranslationInput;
 import com.pino.translateitapi.model.entity.ProjectEntity;
 import com.pino.translateitapi.model.entity.ProjectLanguageEntity;
 import com.pino.translateitapi.model.entity.TranslationEntity;
+import com.pino.translateitapi.model.entity.TranslationKeyEntity;
+import com.pino.translateitapi.util.BatchUtils;
 import com.pino.translateitapi.util.PageUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +26,7 @@ public class TranslationService {
     private final ProjectRepository projectRepository;
     private final ProjectLanguageRepository projectLanguageRepository;
     private final TranslationRepository translationRepository;
+    private final TranslationKeyRepository translationKeyRepository;
 
     @Transactional(readOnly = true)
     public List<Translation> findTranslation(Integer projectLanguageOid) {
@@ -52,5 +56,14 @@ public class TranslationService {
         }
         translationEntity.setContent(input.getContent());
         translationRepository.save(translationEntity);
+    }
+
+    @Transactional
+    public void deleteByProjectOid(int projectOid) {
+        List<Integer> translationKeyOidList = translationKeyRepository.findByProjectOid(projectOid)
+            .stream()
+            .map(TranslationKeyEntity::getOid)
+            .toList();
+        BatchUtils.subBatchIterator(translationKeyOidList, 500, translationRepository::deleteByTranslationKeyOidIn);
     }
 }

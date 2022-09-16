@@ -3,6 +3,8 @@ type Mutation {
     createProject(input: CreateProjectInput!): Void
     "更新專案"
     updateProject(projectOid:Int!, input: UpdateProjectInput!): Void
+    "刪除專案"
+    deleteProject(projectOid:Int!): Void
 
     "新增翻譯資料(key)"
     createTranslationKey(input: CreateTranslationKeyInput!): Void

@@ -13,4 +13,6 @@ public interface ProjectLanguageRepository extends JpaRepository<ProjectLanguage
     Page<ProjectLanguageEntity> findByProjectOid(Integer projectOid, Pageable pageable);
 
     ProjectLanguageEntity findByOid(Integer oid);
+
+    void deleteByProjectOid(int projectOid);
 }

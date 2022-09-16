@@ -41,4 +41,9 @@ public class ProjectController {
         projectService.updateProject(projectOid, input);
     }
 
+    @MutationMapping
+    public void deleteProject(@Argument int projectOid) {
+        projectService.deleteProject(projectOid);
+    }
+
 }

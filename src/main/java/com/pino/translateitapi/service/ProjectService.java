@@ -2,6 +2,7 @@ package com.pino.translateitapi.service;
 
 import com.pino.translateitapi.dao.ProjectLanguageRepository;
 import com.pino.translateitapi.dao.ProjectRepository;
+import com.pino.translateitapi.dao.TranslationKeyRepository;
 import com.pino.translateitapi.exception.BadRequestException;
 import com.pino.translateitapi.model.dto.Pagination;
 import com.pino.translateitapi.model.dto.Project;
@@ -23,8 +24,10 @@ import java.util.List;
 public class ProjectService {
 
     private final LanguageService languageService;
+    private final TranslationService translationService;
     private final ProjectRepository projectRepository;
     private final ProjectLanguageRepository projectLanguageRepository;
+    private final TranslationKeyRepository translationKeyRepository;
 
     public List<Project> findProject() {
         return ModelMapperUtils.mapList(projectRepository.findAll(), Project.class);
@@ -49,6 +52,20 @@ public class ProjectService {
     public void updateProject(int projectOid, UpdateProjectInput updateProjectInput) {
         validProjectOid(projectOid);
         updateProjectToDb(projectOid, updateProjectInput);
+    }
+
+    @Transactional
+    public void deleteProject(int projectOid) {
+        validProjectOid(projectOid);
+        deleteProjectToDb(projectOid);
+    }
+
+    @Transactional
+    public void deleteProjectToDb(int projectOid) {
+        translationService.deleteByProjectOid(projectOid);
+        translationKeyRepository.deleteByProjectOid(projectOid);
+        projectLanguageRepository.deleteByProjectOid(projectOid);
+        projectRepository.deleteByOid(projectOid);
     }
 
     private void validCreateProjectInput(CreateProjectInput createProjectInput) {

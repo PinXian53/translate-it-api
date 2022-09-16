@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 public interface TranslationRepository extends JpaRepository<TranslationEntity, Integer> {
 
     @Query("select new com.pino.translateitapi.model.dto.Translation( " +
@@ -24,4 +26,6 @@ public interface TranslationRepository extends JpaRepository<TranslationEntity, 
         Pageable pageable);
 
     TranslationEntity findByTranslationKeyOidAndLanguageCode(Integer translationKeyOid, String languageCode);
+
+    void deleteByTranslationKeyOidIn(List<Integer> translationKeyList);
 }
