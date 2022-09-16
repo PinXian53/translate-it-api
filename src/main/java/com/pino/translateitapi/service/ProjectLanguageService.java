@@ -2,6 +2,8 @@ package com.pino.translateitapi.service;
 
 import com.pino.translateitapi.dao.ProjectLanguageRepository;
 import com.pino.translateitapi.exception.BadRequestException;
+import com.pino.translateitapi.manager.ProjectManager;
+import com.pino.translateitapi.manager.TranslationManager;
 import com.pino.translateitapi.model.dto.Pagination;
 import com.pino.translateitapi.model.dto.ProjectLanguage;
 import com.pino.translateitapi.model.dto.input.CreateProjectLanguageInput;
@@ -22,14 +24,16 @@ import java.util.Optional;
 @Service
 public class ProjectLanguageService {
 
-    private final ProjectService projectService;
-    private final ProjectLanguageRepository projectLanguageRepository;
-    private final TranslationService translationService;
     private final LanguageService languageService;
+    private final TranslationManager translationManager;
+
+    private final ProjectManager projectManager;
+
+    private final ProjectLanguageRepository projectLanguageRepository;
 
     @Transactional(readOnly = true)
     public List<ProjectLanguage> findProjectLanguage(Integer projectOid) {
-        ProjectEntity projectEntity = projectService.validProjectOidAndReturnEntity(projectOid);
+        ProjectEntity projectEntity = projectManager.validProjectOidAndReturnEntity(projectOid);
         return toProjectLanguageList(projectEntity.getSourceLanguageCode(),
             projectLanguageRepository.findByProjectOid(projectOid));
     }
@@ -47,7 +51,7 @@ public class ProjectLanguageService {
 
     @Transactional(readOnly = true)
     public Pagination<ProjectLanguage> findProjectLanguagePage(Integer projectOid, Pageable pageable) {
-        ProjectEntity projectEntity = projectService.validProjectOidAndReturnEntity(projectOid);
+        ProjectEntity projectEntity = projectManager.validProjectOidAndReturnEntity(projectOid);
         return toProjectLanguagePage(
             projectEntity.getSourceLanguageCode(),
             projectLanguageRepository.findByProjectOid(projectOid, pageable),
@@ -71,7 +75,7 @@ public class ProjectLanguageService {
     @Transactional
     public void createProjectLanguage(final int projectOid, CreateProjectLanguageInput createProjectLanguageInput) {
         final String languageCode = createProjectLanguageInput.getLanguageCode();
-        projectService.validProjectOid(projectOid);
+        projectManager.validProjectOid(projectOid);
         languageService.validLanguageCode(languageCode);
         validProjectCanNotCreateDuplicateLanguageCode(projectOid, languageCode);
         createProjectLanguageToDb(projectOid, languageCode);
@@ -89,10 +93,10 @@ public class ProjectLanguageService {
     @Transactional
     public void deleteProjectLanguage(int projectLanguageOid) {
         ProjectLanguageEntity projectLanguage = validProjectLanguageOidAndReturnEntity(projectLanguageOid);
-        ProjectEntity projectEntity = projectService.validProjectOidAndReturnEntity(projectLanguage.getProjectOid());
+        ProjectEntity projectEntity = projectManager.validProjectOidAndReturnEntity(projectLanguage.getProjectOid());
         validDeleteLanguageCodeCanNotEqualSourceLanguageCode(projectEntity.getSourceLanguageCode(),
             projectLanguage.getLanguageCode());
-        translationService.deleteByProjectOidAndLanguageCode(projectLanguageOid, projectLanguage.getLanguageCode());
+        translationManager.deleteByProjectOidAndLanguageCode(projectLanguageOid, projectLanguage.getLanguageCode());
         projectLanguageRepository.delete(projectLanguage);
     }
 

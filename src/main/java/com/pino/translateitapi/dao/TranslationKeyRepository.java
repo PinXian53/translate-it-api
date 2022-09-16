@@ -12,4 +12,6 @@ public interface TranslationKeyRepository extends JpaRepository<TranslationKeyEn
     void deleteByProjectOid(int projectOid);
 
     TranslationKeyEntity findByOid(Integer translationKeyOid);
+
+    boolean existsByProjectOidAndKey(int projectOid, String key);
 }

@@ -3,7 +3,7 @@ package com.pino.translateitapi.service;
 import com.pino.translateitapi.dao.ProjectLanguageRepository;
 import com.pino.translateitapi.dao.ProjectRepository;
 import com.pino.translateitapi.dao.TranslationKeyRepository;
-import com.pino.translateitapi.exception.BadRequestException;
+import com.pino.translateitapi.manager.ProjectManager;
 import com.pino.translateitapi.model.dto.Pagination;
 import com.pino.translateitapi.model.dto.Project;
 import com.pino.translateitapi.model.dto.input.CreateProjectInput;
@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -26,6 +25,9 @@ public class ProjectService {
 
     private final LanguageService languageService;
     private final TranslationService translationService;
+
+    private final ProjectManager projectManager;
+
     private final ProjectRepository projectRepository;
     private final ProjectLanguageRepository projectLanguageRepository;
     private final TranslationKeyRepository translationKeyRepository;
@@ -51,13 +53,13 @@ public class ProjectService {
 
     @Transactional
     public void updateProject(int projectOid, UpdateProjectInput updateProjectInput) {
-        validProjectOid(projectOid);
+        projectManager.validProjectOid(projectOid);
         updateProjectToDb(projectOid, updateProjectInput);
     }
 
     @Transactional
     public void deleteProject(int projectOid) {
-        validProjectOid(projectOid);
+        projectManager.validProjectOid(projectOid);
         deleteProjectToDb(projectOid);
     }
 
@@ -84,17 +86,6 @@ public class ProjectService {
         projectLanguageEntity.setLanguageCode(languageCode);
         projectLanguageEntity.setProgressRate(0); // default 0
         projectLanguageRepository.save(projectLanguageEntity);
-    }
-
-    public void validProjectOid(int projectOid) {
-        if (!projectRepository.existsByOid(projectOid)) {
-            throw new BadRequestException("無法識別之專案");
-        }
-    }
-
-    public ProjectEntity validProjectOidAndReturnEntity(int projectOid) {
-        return Optional.ofNullable(projectRepository.findByOid(projectOid))
-            .orElseThrow(() -> new BadRequestException("無法識別之專案"));
     }
 
     private void updateProjectToDb(int projectOid, UpdateProjectInput createProjectInput) {
