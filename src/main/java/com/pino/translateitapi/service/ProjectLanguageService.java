@@ -7,6 +7,7 @@ import com.pino.translateitapi.manager.TranslationManager;
 import com.pino.translateitapi.model.dto.Pagination;
 import com.pino.translateitapi.model.dto.ProjectLanguage;
 import com.pino.translateitapi.model.dto.input.CreateProjectLanguageInput;
+import com.pino.translateitapi.model.dto.input.UpdateProjectLanguageInput;
 import com.pino.translateitapi.model.entity.ProjectEntity;
 import com.pino.translateitapi.model.entity.ProjectLanguageEntity;
 import com.pino.translateitapi.util.ModelMapperUtils;
@@ -82,11 +83,21 @@ public class ProjectLanguageService {
     }
 
     @Transactional
+    public void updateProjectLanguageToDb(
+        final int projectLanguageOid,
+        UpdateProjectLanguageInput createProjectLanguageInput) {
+        ProjectLanguageEntity projectLanguage = validProjectLanguageOidAndReturnEntity(projectLanguageOid);
+        projectLanguage.setEnable(createProjectLanguageInput.isEnable());
+        projectLanguageRepository.save(projectLanguage);
+    }
+
+    @Transactional
     public void createProjectLanguageToDb(final int projectOid, String languageCode) {
         ProjectLanguageEntity entity = new ProjectLanguageEntity();
         entity.setProjectOid(projectOid);
         entity.setLanguageCode(languageCode);
         entity.setProgressRate(0); // default 0
+        entity.setEnable(true); // default true
         projectLanguageRepository.save(entity);
     }
 

@@ -11,6 +11,8 @@ type Mutation {
 
     "新增專案語系"
     createProjectLanguage(projectOid: Int!, input: CreateProjectLanguageInput!): Void
+    "更新專案語系"
+    updateProjectLanguage(projectOid: Int!, input: UpdateProjectLanguageInput!): Void
     "刪除專案語系"
     deleteProjectLanguage(projectLanguageOid: Int!): Void
 

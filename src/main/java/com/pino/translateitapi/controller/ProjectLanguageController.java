@@ -4,6 +4,7 @@ import com.pino.translateitapi.model.dto.Pagination;
 import com.pino.translateitapi.model.dto.Project;
 import com.pino.translateitapi.model.dto.ProjectLanguage;
 import com.pino.translateitapi.model.dto.input.CreateProjectLanguageInput;
+import com.pino.translateitapi.model.dto.input.UpdateProjectLanguageInput;
 import com.pino.translateitapi.service.ProjectLanguageService;
 import com.pino.translateitapi.util.PageUtils;
 import lombok.RequiredArgsConstructor;
@@ -43,6 +44,13 @@ public class ProjectLanguageController {
     @MutationMapping
     public void createProjectLanguage(@Argument int projectOid, @Argument @Valid CreateProjectLanguageInput input) {
         projectLanguageService.createProjectLanguage(projectOid, input);
+    }
+
+    @MutationMapping
+    public void updateProjectLanguage(
+        @Argument int projectLanguageOid,
+        @Argument @Valid UpdateProjectLanguageInput input) {
+        projectLanguageService.updateProjectLanguageToDb(projectLanguageOid, input);
     }
 
     @MutationMapping

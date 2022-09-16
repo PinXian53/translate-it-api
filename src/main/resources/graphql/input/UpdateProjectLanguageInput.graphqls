@@ -1,0 +1,4 @@
+input UpdateProjectLanguageInput{
+    "是否啟用"
+    enable: Boolean!
+}
