@@ -1,7 +1,6 @@
 package com.pino.translateitapi.service;
 
 import com.pino.translateitapi.dao.ProjectLanguageRepository;
-import com.pino.translateitapi.dao.ProjectRepository;
 import com.pino.translateitapi.model.dto.Pagination;
 import com.pino.translateitapi.model.dto.ProjectLanguage;
 import com.pino.translateitapi.model.dto.input.CreateProjectLanguageInput;
@@ -10,6 +9,7 @@ import com.pino.translateitapi.model.entity.ProjectLanguageEntity;
 import com.pino.translateitapi.util.ModelMapperUtils;
 import com.pino.translateitapi.util.PageUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,8 +21,6 @@ import java.util.List;
 public class ProjectLanguageService {
 
     private final ProjectService projectService;
-
-    private final ProjectRepository projectRepository;
     private final ProjectLanguageRepository projectLanguageRepository;
 
     @Transactional(readOnly = true)
@@ -45,13 +43,21 @@ public class ProjectLanguageService {
 
     @Transactional(readOnly = true)
     public Pagination<ProjectLanguage> findProjectLanguagePage(Integer projectOid, Pageable pageable) {
-        final ProjectEntity projectEntity = projectRepository.findByOid(projectOid);
-        final String sourceLanguageCode = projectEntity.getSourceLanguageCode();
-        return PageUtils.toPagination(
+        ProjectEntity projectEntity = projectService.validProjectOidAndReturnEntity(projectOid);
+        return toProjectLanguagePage(
+            projectEntity.getSourceLanguageCode(),
             projectLanguageRepository.findByProjectOid(projectOid, pageable),
-            pageable,
-            o -> {
-                ProjectLanguage projectLanguage = ModelMapperUtils.map(o, ProjectLanguage.class);
+            pageable
+        );
+    }
+
+    private Pagination<ProjectLanguage> toProjectLanguagePage(
+        String sourceLanguageCode,
+        Page<ProjectLanguageEntity> entityPage,
+        Pageable pageable
+    ) {
+        return PageUtils.toPagination(entityPage, pageable, entity -> {
+                ProjectLanguage projectLanguage = ModelMapperUtils.map(entity, ProjectLanguage.class);
                 projectLanguage.setIsSource(sourceLanguageCode.equals(projectLanguage.getLanguageCode()));
                 return projectLanguage;
             }
