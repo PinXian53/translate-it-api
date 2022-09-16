@@ -40,8 +40,8 @@ public class ProjectLanguageController {
     }
 
     @MutationMapping
-    public void createProjectLanguage(@Argument CreateProjectLanguageInput input) {
-        projectLanguageService.createProjectLanguage(input);
+    public void createProjectLanguage(@Argument int projectOid, @Argument CreateProjectLanguageInput input) {
+        projectLanguageService.createProjectLanguage(projectOid, input);
     }
 
     @MutationMapping

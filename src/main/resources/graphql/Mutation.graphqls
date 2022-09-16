@@ -10,7 +10,7 @@ type Mutation {
     createTranslationKey(input: CreateTranslationKeyInput!): Void
 
     "新增專案語系"
-    createProjectLanguage(input: CreateProjectLanguageInput!): Void
+    createProjectLanguage(projectOid: Int!, input: CreateProjectLanguageInput!): Void
     "刪除專案語系"
     deleteProjectLanguage(projectLanguageOid: Int!): Void
 

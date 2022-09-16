@@ -25,6 +25,7 @@ public class ProjectLanguageService {
     private final ProjectService projectService;
     private final ProjectLanguageRepository projectLanguageRepository;
     private final TranslationService translationService;
+    private final LanguageService languageService;
 
     @Transactional(readOnly = true)
     public List<ProjectLanguage> findProjectLanguage(Integer projectOid) {
@@ -68,14 +69,19 @@ public class ProjectLanguageService {
     }
 
     @Transactional
-    public void createProjectLanguage(CreateProjectLanguageInput createProjectLanguageInput) {
-        projectService.validProjectOid(createProjectLanguageInput.getProjectOid());
-        createProjectLanguageToDb(createProjectLanguageInput);
+    public void createProjectLanguage(final int projectOid, CreateProjectLanguageInput createProjectLanguageInput) {
+        final String languageCode = createProjectLanguageInput.getLanguageCode();
+        projectService.validProjectOid(projectOid);
+        languageService.validLanguageCode(languageCode);
+        validProjectCanNotCreateDuplicateLanguageCode(projectOid, languageCode);
+        createProjectLanguageToDb(projectOid, languageCode);
     }
 
     @Transactional
-    public void createProjectLanguageToDb(CreateProjectLanguageInput createProjectLanguageInput) {
-        ProjectLanguageEntity entity = ModelMapperUtils.map(createProjectLanguageInput, ProjectLanguageEntity.class);
+    public void createProjectLanguageToDb(final int projectOid, String languageCode) {
+        ProjectLanguageEntity entity = new ProjectLanguageEntity();
+        entity.setProjectOid(projectOid);
+        entity.setLanguageCode(languageCode);
         entity.setProgressRate(0); // default 0
         projectLanguageRepository.save(entity);
     }
@@ -100,6 +106,12 @@ public class ProjectLanguageService {
         String deleteLanguageCode) {
         if (sourceLanguageCode.equals(deleteLanguageCode)) {
             throw new BadRequestException("主語系無法刪除");
+        }
+    }
+
+    private void validProjectCanNotCreateDuplicateLanguageCode(int projectOid, String createLanguageCode) {
+        if (projectLanguageRepository.existsByProjectOidAndLanguageCode(projectOid, createLanguageCode)) {
+            throw new BadRequestException("語系已存在，無法重複新增");
         }
     }
 }
