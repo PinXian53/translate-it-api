@@ -15,5 +15,5 @@ type Mutation {
     deleteProjectLanguage(projectLanguageOid: Int!): Void
 
     "更新翻譯內容"
-    updateTranslation(input: UpdateTranslationInput!): Void
+    updateTranslation(translationKeyOid: Oid!, languageCode: String!, input: UpdateTranslationInput!): Void
 }

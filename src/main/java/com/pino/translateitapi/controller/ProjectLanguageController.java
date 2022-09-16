@@ -13,6 +13,7 @@ import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -40,7 +41,7 @@ public class ProjectLanguageController {
     }
 
     @MutationMapping
-    public void createProjectLanguage(@Argument int projectOid, @Argument CreateProjectLanguageInput input) {
+    public void createProjectLanguage(@Argument int projectOid, @Argument @Valid CreateProjectLanguageInput input) {
         projectLanguageService.createProjectLanguage(projectOid, input);
     }
 

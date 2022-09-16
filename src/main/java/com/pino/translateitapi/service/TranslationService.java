@@ -46,13 +46,13 @@ public class TranslationService {
             projectLanguageEntity.getLanguageCode(), projectEntity.getSourceLanguageCode(), pageable), pageable);
     }
 
-    public void creatOrUpdateTranslation(UpdateTranslationInput input) {
+    public void creatOrUpdateTranslation(int translationKeyOid, String languageCode, UpdateTranslationInput input) {
         TranslationEntity translationEntity = translationRepository.findByTranslationKeyOidAndLanguageCode(
-            input.getTranslationKeyOid(), input.getLanguageCode());
+            translationKeyOid, languageCode);
         if (translationEntity == null) {
             translationEntity = new TranslationEntity();
-            translationEntity.setTranslationKeyOid(input.getTranslationKeyOid());
-            translationEntity.setLanguageCode(input.getLanguageCode());
+            translationEntity.setTranslationKeyOid(translationKeyOid);
+            translationEntity.setLanguageCode(languageCode);
         }
         translationEntity.setContent(input.getContent());
         translationRepository.save(translationEntity);

@@ -13,6 +13,7 @@ import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.graphql.data.method.annotation.SchemaMapping;
 import org.springframework.stereotype.Controller;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -40,7 +41,10 @@ public class TranslationController {
     }
 
     @MutationMapping
-    public void updateTranslation(@Argument UpdateTranslationInput input) {
-        translationService.creatOrUpdateTranslation(input);
+    public void updateTranslation(
+        @Argument int translationKeyOid,
+        @Argument String languageCode,
+        @Argument @Valid UpdateTranslationInput input) {
+        translationService.creatOrUpdateTranslation(translationKeyOid, languageCode, input);
     }
 }

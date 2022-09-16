@@ -1,8 +1,4 @@
 input UpdateTranslationInput{
-    "Key Oid"
-    translationKeyOid: Oid!
-    "語系"
-    languageCode: String!
     "翻譯內容"
     content: String!
 }
