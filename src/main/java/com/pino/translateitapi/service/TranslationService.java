@@ -60,10 +60,21 @@ public class TranslationService {
 
     @Transactional
     public void deleteByProjectOid(int projectOid) {
-        List<Integer> translationKeyOidList = translationKeyRepository.findByProjectOid(projectOid)
+        List<Integer> translationKeyOidList = findTranslationKeyOidByProjectOid(projectOid);
+        BatchUtils.subBatchIterator(translationKeyOidList, 500, translationRepository::deleteByTranslationKeyOidIn);
+    }
+
+    @Transactional
+    public void deleteByProjectOidAndLanguageCode(int projectOid, final String languageCode) {
+        List<Integer> translationKeyOidList = findTranslationKeyOidByProjectOid(projectOid);
+        BatchUtils.subBatchIterator(translationKeyOidList, 500,
+            subOidList -> translationRepository.deleteByTranslationKeyOidInAndLanguageCode(subOidList, languageCode));
+    }
+
+    private List<Integer> findTranslationKeyOidByProjectOid(int projectOid) {
+        return translationKeyRepository.findByProjectOid(projectOid)
             .stream()
             .map(TranslationKeyEntity::getOid)
             .toList();
-        BatchUtils.subBatchIterator(translationKeyOidList, 500, translationRepository::deleteByTranslationKeyOidIn);
     }
 }

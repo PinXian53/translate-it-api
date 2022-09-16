@@ -1,6 +1,7 @@
 package com.pino.translateitapi.service;
 
 import com.pino.translateitapi.dao.ProjectLanguageRepository;
+import com.pino.translateitapi.exception.BadRequestException;
 import com.pino.translateitapi.model.dto.Pagination;
 import com.pino.translateitapi.model.dto.ProjectLanguage;
 import com.pino.translateitapi.model.dto.input.CreateProjectLanguageInput;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -22,6 +24,7 @@ public class ProjectLanguageService {
 
     private final ProjectService projectService;
     private final ProjectLanguageRepository projectLanguageRepository;
+    private final TranslationService translationService;
 
     @Transactional(readOnly = true)
     public List<ProjectLanguage> findProjectLanguage(Integer projectOid) {
@@ -75,5 +78,28 @@ public class ProjectLanguageService {
         ProjectLanguageEntity entity = ModelMapperUtils.map(createProjectLanguageInput, ProjectLanguageEntity.class);
         entity.setProgressRate(0); // default 0
         projectLanguageRepository.save(entity);
+    }
+
+    @Transactional
+    public void deleteProjectLanguage(int projectLanguageOid) {
+        ProjectLanguageEntity projectLanguage = validProjectOidAndReturnEntity(projectLanguageOid);
+        ProjectEntity projectEntity = projectService.validProjectOidAndReturnEntity(projectLanguage.getProjectOid());
+        validDeleteLanguageCodeCanNotEqualSourceLanguageCode(projectEntity.getSourceLanguageCode(),
+            projectLanguage.getLanguageCode());
+        translationService.deleteByProjectOidAndLanguageCode(projectLanguageOid, projectLanguage.getLanguageCode());
+        projectLanguageRepository.delete(projectLanguage);
+    }
+
+    public ProjectLanguageEntity validProjectOidAndReturnEntity(int projectLanguageOid) {
+        return Optional.ofNullable(projectLanguageRepository.findByOid(projectLanguageOid))
+            .orElseThrow(() -> new BadRequestException("無法識別之專案語系"));
+    }
+
+    private void validDeleteLanguageCodeCanNotEqualSourceLanguageCode(
+        String sourceLanguageCode,
+        String deleteLanguageCode) {
+        if (sourceLanguageCode.equals(deleteLanguageCode)) {
+            throw new BadRequestException("主語系無法刪除");
+        }
     }
 }

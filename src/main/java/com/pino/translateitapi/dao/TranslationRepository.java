@@ -28,4 +28,6 @@ public interface TranslationRepository extends JpaRepository<TranslationEntity, 
     TranslationEntity findByTranslationKeyOidAndLanguageCode(Integer translationKeyOid, String languageCode);
 
     void deleteByTranslationKeyOidIn(List<Integer> translationKeyList);
+
+    void deleteByTranslationKeyOidInAndLanguageCode(List<Integer> translationKeyList, String languageCode);
 }

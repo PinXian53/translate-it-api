@@ -45,7 +45,7 @@ public class ProjectLanguageController {
     }
 
     @MutationMapping
-    public void deleteProjectLanguage(@Argument CreateProjectLanguageInput input) {
-        projectLanguageService.createProjectLanguage(input);
+    public void deleteProjectLanguage(@Argument int projectLanguageOid) {
+        projectLanguageService.deleteProjectLanguage(projectLanguageOid);
     }
 }
