@@ -27,10 +27,17 @@ public class ProjectLanguageService {
 
     @Transactional(readOnly = true)
     public List<ProjectLanguage> findProjectLanguage(Integer projectOid) {
-        final ProjectEntity projectEntity = projectRepository.findByOid(projectOid);
-        final String sourceLanguageCode = projectEntity.getSourceLanguageCode();
-        return projectLanguageRepository.findByProjectOid(projectOid).stream().map(o -> {
-            ProjectLanguage projectLanguage = ModelMapperUtils.map(o, ProjectLanguage.class);
+        ProjectEntity projectEntity = projectService.validProjectOidAndReturnEntity(projectOid);
+        return toProjectLanguageList(projectEntity.getSourceLanguageCode(),
+            projectLanguageRepository.findByProjectOid(projectOid));
+    }
+
+    private List<ProjectLanguage> toProjectLanguageList(
+        String sourceLanguageCode,
+        List<ProjectLanguageEntity> entityList
+    ) {
+        return entityList.stream().map(entity -> {
+            ProjectLanguage projectLanguage = ModelMapperUtils.map(entity, ProjectLanguage.class);
             projectLanguage.setIsSource(sourceLanguageCode.equals(projectLanguage.getLanguageCode()));
             return projectLanguage;
         }).toList();

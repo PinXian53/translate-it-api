@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -89,6 +90,11 @@ public class ProjectService {
         if (!projectRepository.existsByOid(projectOid)) {
             throw new BadRequestException("無法識別之專案");
         }
+    }
+
+    public ProjectEntity validProjectOidAndReturnEntity(int projectOid) {
+        return Optional.ofNullable(projectRepository.findByOid(projectOid))
+            .orElseThrow(() -> new BadRequestException("無法識別之專案"));
     }
 
     private void updateProjectToDb(int projectOid, UpdateProjectInput createProjectInput) {
