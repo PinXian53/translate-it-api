@@ -10,4 +10,6 @@ public interface TranslationKeyRepository extends JpaRepository<TranslationKeyEn
     List<TranslationKeyEntity> findByProjectOid(int projectOid);
 
     void deleteByProjectOid(int projectOid);
+
+    TranslationKeyEntity findByOid(Integer translationKeyOid);
 }

@@ -88,7 +88,7 @@ public class ProjectLanguageService {
 
     @Transactional
     public void deleteProjectLanguage(int projectLanguageOid) {
-        ProjectLanguageEntity projectLanguage = validProjectOidAndReturnEntity(projectLanguageOid);
+        ProjectLanguageEntity projectLanguage = validProjectLanguageOidAndReturnEntity(projectLanguageOid);
         ProjectEntity projectEntity = projectService.validProjectOidAndReturnEntity(projectLanguage.getProjectOid());
         validDeleteLanguageCodeCanNotEqualSourceLanguageCode(projectEntity.getSourceLanguageCode(),
             projectLanguage.getLanguageCode());
@@ -96,7 +96,7 @@ public class ProjectLanguageService {
         projectLanguageRepository.delete(projectLanguage);
     }
 
-    public ProjectLanguageEntity validProjectOidAndReturnEntity(int projectLanguageOid) {
+    public ProjectLanguageEntity validProjectLanguageOidAndReturnEntity(int projectLanguageOid) {
         return Optional.ofNullable(projectLanguageRepository.findByOid(projectLanguageOid))
             .orElseThrow(() -> new BadRequestException("無法識別之專案語系"));
     }
