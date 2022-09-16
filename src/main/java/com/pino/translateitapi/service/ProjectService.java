@@ -40,17 +40,25 @@ public class ProjectService {
     public void createProject(CreateProjectInput createProjectInput) {
         validCreateProjectInput(createProjectInput);
         // 建立專案
-        ProjectEntity projectEntity = ModelMapperUtils.map(createProjectInput, ProjectEntity.class);
-        projectRepository.save(projectEntity);
+        ProjectEntity projectEntity = createProjectToDb(createProjectInput);
         // 建立主語系
-        ProjectLanguageEntity projectLanguageEntity = new ProjectLanguageEntity();
-        projectLanguageEntity.setProjectOid(projectEntity.getOid());
-        projectLanguageEntity.setLanguageCode(createProjectInput.getSourceLanguageCode());
-        projectLanguageEntity.setProgressRate(0);
-        projectLanguageRepository.save(projectLanguageEntity);
+        createProjectLanguageToDb(projectEntity.getOid(), createProjectInput.getSourceLanguageCode());
     }
 
     private void validCreateProjectInput(CreateProjectInput createProjectInput) {
         languageService.validLanguageCode(createProjectInput.getSourceLanguageCode());
+    }
+
+    private ProjectEntity createProjectToDb(CreateProjectInput createProjectInput) {
+        ProjectEntity projectEntity = ModelMapperUtils.map(createProjectInput, ProjectEntity.class);
+        return projectRepository.save(projectEntity);
+    }
+
+    private void createProjectLanguageToDb(int projectOid, String languageCode) {
+        ProjectLanguageEntity projectLanguageEntity = new ProjectLanguageEntity();
+        projectLanguageEntity.setProjectOid(projectOid);
+        projectLanguageEntity.setLanguageCode(languageCode);
+        projectLanguageEntity.setProgressRate(0); // default 0
+        projectLanguageRepository.save(projectLanguageEntity);
     }
 }
