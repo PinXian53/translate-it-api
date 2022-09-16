@@ -19,7 +19,7 @@ public class ProjectLanguage {
     /**
      * 進度(%)
      */
-    private Integer progressRate;
+    private long progressRate;
     /**
      * 是否啟用
      */

@@ -21,7 +21,7 @@ public class Project {
     /**
      * 進度(%)
      */
-    private Integer progressRate;
+    private long progressRate;
     /**
      * 建立日期
      */

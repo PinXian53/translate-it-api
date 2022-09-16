@@ -3,6 +3,7 @@ package com.pino.translateitapi.service;
 import com.pino.translateitapi.dao.ProjectLanguageRepository;
 import com.pino.translateitapi.dao.ProjectRepository;
 import com.pino.translateitapi.dao.TranslationKeyRepository;
+import com.pino.translateitapi.dao.TranslationRepository;
 import com.pino.translateitapi.manager.ProjectManager;
 import com.pino.translateitapi.model.dto.Pagination;
 import com.pino.translateitapi.model.dto.Project;
@@ -31,17 +32,26 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final ProjectLanguageRepository projectLanguageRepository;
     private final TranslationKeyRepository translationKeyRepository;
+    private final TranslationRepository translationRepository;
 
     public List<Project> findProject() {
-        return ModelMapperUtils.mapList(projectRepository.findAll(), Project.class);
+        return projectRepository.findAll().stream()
+            .map(this::toProject)
+            .toList();
     }
 
     public Pagination<Project> findProjectPage(Pageable pageable) {
         return PageUtils.toPagination(
             projectRepository.findAll(pageable),
             pageable,
-            o -> ModelMapperUtils.map(o, Project.class)
+            this::toProject
         );
+    }
+
+    private Project toProject(ProjectEntity projectEntity) {
+        Project project = ModelMapperUtils.map(projectEntity, Project.class);
+        project.setProgressRate(calculateFinishProgressRate(project.getOid()));
+        return project;
     }
 
     @Transactional
@@ -77,7 +87,6 @@ public class ProjectService {
 
     private ProjectEntity createProjectToDb(CreateProjectInput createProjectInput) {
         ProjectEntity projectEntity = ModelMapperUtils.map(createProjectInput, ProjectEntity.class);
-        projectEntity.setProgressRate(0); // default 0
         return projectRepository.save(projectEntity);
     }
 
@@ -85,7 +94,6 @@ public class ProjectService {
         ProjectLanguageEntity projectLanguageEntity = new ProjectLanguageEntity();
         projectLanguageEntity.setProjectOid(projectOid);
         projectLanguageEntity.setLanguageCode(languageCode);
-        projectLanguageEntity.setProgressRate(0); // default 0
         projectLanguageRepository.save(projectLanguageEntity);
     }
 
@@ -94,5 +102,15 @@ public class ProjectService {
         projectEntity.setName(createProjectInput.getName());
         projectEntity.setDescription(createProjectInput.getDescription());
         projectRepository.save(projectEntity);
+    }
+
+    private long calculateFinishProgressRate(int projectOid) {
+        long totalKeyCount = translationKeyRepository.countByProjectOid(projectOid);
+        if (totalKeyCount == 0) {
+            return 0;
+        }
+        long totalLanguageCount = projectLanguageRepository.countByProjectOid(projectOid);
+        long finishedCount = translationRepository.countFinishCount(projectOid);
+        return Math.round((float) (finishedCount * 100) / (totalKeyCount * totalLanguageCount));
     }
 }

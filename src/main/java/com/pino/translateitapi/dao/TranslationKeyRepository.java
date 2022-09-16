@@ -14,4 +14,6 @@ public interface TranslationKeyRepository extends JpaRepository<TranslationKeyEn
     TranslationKeyEntity findByOid(Integer translationKeyOid);
 
     boolean existsByProjectOidAndKey(int projectOid, String key);
+
+    long countByProjectOid(int projectOid);
 }

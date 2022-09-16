@@ -19,4 +19,6 @@ public interface ProjectLanguageRepository extends JpaRepository<ProjectLanguage
     void deleteByProjectOid(int projectOid);
 
     boolean existsByProjectOidAndLanguageCode(int projectOid, String languageCode);
+
+    long countByProjectOid(int projectOid);
 }

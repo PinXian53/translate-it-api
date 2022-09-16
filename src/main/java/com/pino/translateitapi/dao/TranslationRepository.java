@@ -30,4 +30,19 @@ public interface TranslationRepository extends JpaRepository<TranslationEntity, 
     void deleteByTranslationKeyOidIn(List<Integer> translationKeyList);
 
     void deleteByTranslationKeyOidInAndLanguageCode(List<Integer> translationKeyList, String languageCode);
+
+    @Query("select count(translationKey) from TranslationKeyEntity translationKey " +
+        " left join TranslationEntity translation " +
+        " on translationKey.oid = translation.translationKeyOid and translation.languageCode = :languageCode " +
+        " where translationKey.projectOid = :projectOid " +
+        " and translation.content is not null")
+    long countFinishCount(Integer projectOid, String languageCode);
+
+    @Query("select count(translationKey) from TranslationKeyEntity translationKey " +
+        " left join TranslationEntity translation " +
+        " on translationKey.oid = translation.translationKeyOid " +
+        " where translationKey.projectOid = :projectOid " +
+        " and translation.content is not null")
+    long countFinishCount(Integer projectOid);
+
 }

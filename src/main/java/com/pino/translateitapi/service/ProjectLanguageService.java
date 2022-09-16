@@ -1,6 +1,8 @@
 package com.pino.translateitapi.service;
 
 import com.pino.translateitapi.dao.ProjectLanguageRepository;
+import com.pino.translateitapi.dao.TranslationKeyRepository;
+import com.pino.translateitapi.dao.TranslationRepository;
 import com.pino.translateitapi.exception.BadRequestException;
 import com.pino.translateitapi.manager.ProjectManager;
 import com.pino.translateitapi.manager.TranslationManager;
@@ -31,21 +33,25 @@ public class ProjectLanguageService {
     private final ProjectManager projectManager;
 
     private final ProjectLanguageRepository projectLanguageRepository;
+    private final TranslationKeyRepository translationKeyRepository;
+    private final TranslationRepository translationRepository;
 
     @Transactional(readOnly = true)
     public List<ProjectLanguage> findProjectLanguage(Integer projectOid) {
         ProjectEntity projectEntity = projectManager.validProjectOidAndReturnEntity(projectOid);
-        return toProjectLanguageList(projectEntity.getSourceLanguageCode(),
+        return toProjectLanguageList(projectOid, projectEntity.getSourceLanguageCode(),
             projectLanguageRepository.findByProjectOid(projectOid));
     }
 
     private List<ProjectLanguage> toProjectLanguageList(
+        Integer projectOid,
         String sourceLanguageCode,
         List<ProjectLanguageEntity> entityList
     ) {
         return entityList.stream().map(entity -> {
             ProjectLanguage projectLanguage = ModelMapperUtils.map(entity, ProjectLanguage.class);
             projectLanguage.setIsSource(sourceLanguageCode.equals(projectLanguage.getLanguageCode()));
+            projectLanguage.setProgressRate(calculateFinishProgressRate(projectOid, entity.getLanguageCode()));
             return projectLanguage;
         }).toList();
     }
@@ -54,6 +60,7 @@ public class ProjectLanguageService {
     public Pagination<ProjectLanguage> findProjectLanguagePage(Integer projectOid, Pageable pageable) {
         ProjectEntity projectEntity = projectManager.validProjectOidAndReturnEntity(projectOid);
         return toProjectLanguagePage(
+            projectOid,
             projectEntity.getSourceLanguageCode(),
             projectLanguageRepository.findByProjectOid(projectOid, pageable),
             pageable
@@ -61,13 +68,15 @@ public class ProjectLanguageService {
     }
 
     private Pagination<ProjectLanguage> toProjectLanguagePage(
+        Integer projectOid,
         String sourceLanguageCode,
         Page<ProjectLanguageEntity> entityPage,
         Pageable pageable
     ) {
         return PageUtils.toPagination(entityPage, pageable, entity -> {
                 ProjectLanguage projectLanguage = ModelMapperUtils.map(entity, ProjectLanguage.class);
-                projectLanguage.setIsSource(sourceLanguageCode.equals(projectLanguage.getLanguageCode()));
+            projectLanguage.setIsSource(sourceLanguageCode.equals(projectLanguage.getLanguageCode()));
+            projectLanguage.setProgressRate(calculateFinishProgressRate(projectOid, entity.getLanguageCode()));
                 return projectLanguage;
             }
         );
@@ -96,7 +105,6 @@ public class ProjectLanguageService {
         ProjectLanguageEntity entity = new ProjectLanguageEntity();
         entity.setProjectOid(projectOid);
         entity.setLanguageCode(languageCode);
-        entity.setProgressRate(0); // default 0
         entity.setEnable(true); // default true
         projectLanguageRepository.save(entity);
     }
@@ -128,5 +136,14 @@ public class ProjectLanguageService {
         if (projectLanguageRepository.existsByProjectOidAndLanguageCode(projectOid, createLanguageCode)) {
             throw new BadRequestException("語系已存在，無法重複新增");
         }
+    }
+
+    private long calculateFinishProgressRate(int projectOid, String languageCode) {
+        long totalCount = translationKeyRepository.countByProjectOid(projectOid);
+        if (totalCount == 0) {
+            return 0;
+        }
+        long finishedCount = translationRepository.countFinishCount(projectOid, languageCode);
+        return Math.round((float) (finishedCount * 100) / totalCount);
     }
 }

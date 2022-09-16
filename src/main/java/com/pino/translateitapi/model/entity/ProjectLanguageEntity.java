@@ -19,9 +19,6 @@ public class ProjectLanguageEntity {
     @Column(name = "language_code")
     private String languageCode;
 
-    @Column(name = "progress_rate")
-    private Integer progressRate;
-
     @Column(name = "enable")
     private boolean enable;
 }
