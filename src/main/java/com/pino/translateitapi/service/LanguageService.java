@@ -57,6 +57,14 @@ public class LanguageService {
         return languageCodeCache.contains(languageCode);
     }
 
+    public String getDescription(String languageCode) {
+        return languageList.stream()
+            .filter(o -> o.getCode().equals(languageCode))
+            .findFirst()
+            .orElseThrow(() -> new InternalServerErrorException("無法識別的 Language Code：" + languageCode))
+            .getDescription();
+    }
+
     public String getAzureCodeCache(String languageCode) {
         String azureCode = azureCodeCache.getOrDefault(languageCode, null);
         if (azureCode == null) {

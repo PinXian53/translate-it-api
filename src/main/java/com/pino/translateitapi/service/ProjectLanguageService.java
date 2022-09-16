@@ -51,6 +51,7 @@ public class ProjectLanguageService {
         return entityList.stream().map(entity -> {
             ProjectLanguage projectLanguage = ModelMapperUtils.map(entity, ProjectLanguage.class);
             projectLanguage.setIsSource(sourceLanguageCode.equals(projectLanguage.getLanguageCode()));
+            projectLanguage.setLanguageDescription(languageService.getDescription(entity.getLanguageCode()));
             projectLanguage.setProgressRate(calculateFinishProgressRate(projectOid, entity.getLanguageCode()));
             return projectLanguage;
         }).toList();
@@ -76,6 +77,7 @@ public class ProjectLanguageService {
         return PageUtils.toPagination(entityPage, pageable, entity -> {
                 ProjectLanguage projectLanguage = ModelMapperUtils.map(entity, ProjectLanguage.class);
             projectLanguage.setIsSource(sourceLanguageCode.equals(projectLanguage.getLanguageCode()));
+            projectLanguage.setLanguageDescription(languageService.getDescription(entity.getLanguageCode()));
             projectLanguage.setProgressRate(calculateFinishProgressRate(projectOid, entity.getLanguageCode()));
                 return projectLanguage;
             }

@@ -17,6 +17,10 @@ public class ProjectLanguage {
      */
     private String languageCode;
     /**
+     * 語系描述
+     */
+    private String languageDescription;
+    /**
      * 進度(%)
      */
     private long progressRate;
