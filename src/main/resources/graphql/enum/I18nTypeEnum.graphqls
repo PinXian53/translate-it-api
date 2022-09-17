@@ -1,0 +1,4 @@
+"i18n 資料格式"
+enum I18nTypeEnum{
+    JSON, YAML, PROPERTIES
+}

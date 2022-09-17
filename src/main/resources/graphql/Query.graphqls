@@ -19,4 +19,7 @@ type Query {
 
     "線上翻譯"
     onlineTranslate(content: String!, onlineTranslateEnum: OnlineTranslateEnum!, fromLanguageCode: String, toLanguageCode: String!): String
+
+    "取得 i18n 檔內容"
+    i18n(projectOid: Oid!, languageCode: String!, i18nType: I18nTypeEnum!, pretty: Boolean): String
 }

@@ -84,9 +84,9 @@ public class TranslationService {
         BatchUtils.subBatchIterator(translationKeyOidList, 500, translationRepository::deleteByTranslationKeyOidIn);
     }
 
-    private void validProjectNeedExistLanguageCode(int projectOid, String createLanguageCode) {
+    public void validProjectNeedExistLanguageCode(int projectOid, String createLanguageCode) {
         if (!projectLanguageRepository.existsByProjectOidAndLanguageCode(projectOid, createLanguageCode)) {
-            throw new BadRequestException("語系已存在，無法重複新增");
+            throw new BadRequestException("語系資料錯誤");
         }
     }
 }
