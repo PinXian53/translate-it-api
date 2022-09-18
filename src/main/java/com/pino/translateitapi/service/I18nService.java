@@ -6,6 +6,7 @@ import com.pino.translateitapi.exception.BadRequestException;
 import com.pino.translateitapi.exception.InternalServerErrorException;
 import com.pino.translateitapi.manager.ProjectManager;
 import com.pino.translateitapi.util.FileSystemUtils;
+import com.pino.translateitapi.util.YamlUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -42,6 +43,9 @@ public class I18nService {
         switch (i18nType) {
             case JSON -> {
                 return exportJson(projectOid, languageCode, pretty);
+            }
+            case YAML -> {
+                return exportYaml(projectOid, languageCode);
             }
             default -> throw new BadRequestException("尚未支援");
         }
@@ -85,6 +89,15 @@ public class I18nService {
             jsonObject.put(keyValue.getKey(), keyValue.getValue());
         });
         return convertToJsonString(jsonObject, pretty);
+    }
+
+    private String exportYaml(int projectOid, String languageCode) {
+        String jsonString = exportJson(projectOid, languageCode, false);
+        try {
+            return YamlUtils.toYaml(jsonString);
+        } catch (Exception e) {
+            throw new InternalServerErrorException("轉換成Yaml失敗(projectOid:%s)".formatted(projectOid), e);
+        }
     }
 
     private String convertToJsonString(JSONObject jsonObject, boolean pretty) {
