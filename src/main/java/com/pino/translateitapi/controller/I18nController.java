@@ -5,7 +5,6 @@ import com.pino.translateitapi.service.I18nService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
@@ -21,7 +20,7 @@ public class I18nController {
         @PathVariable int projectOid,
         @PathVariable String languageCode,
         @PathVariable I18nTypeEnum i18nType) {
-        return i18nService.exportI18n(projectOid, languageCode, i18nType, false);
+        return i18nService.exportI18n(projectOid, languageCode, i18nType);
     }
 
     @GetMapping("i18nFile/{projectOid}/{languageCode}/{i18nType}")
@@ -29,9 +28,8 @@ public class I18nController {
         @PathVariable int projectOid,
         @PathVariable String languageCode,
         @PathVariable I18nTypeEnum i18nType,
-        @RequestParam Boolean pretty,
         HttpServletResponse response) {
-        i18nService.exportI18nFile(projectOid, languageCode, i18nType, Boolean.TRUE.equals(pretty), response);
+        i18nService.exportI18nFile(projectOid, languageCode, i18nType, response);
     }
 
 }

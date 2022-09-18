@@ -11,9 +11,9 @@ import com.pino.translateitapi.util.YamlUtils;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
-import org.json.JSONObject;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
+import pl.jalokim.propertiestojson.util.PropertiesToJsonConverter;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.FileInputStream;
@@ -23,7 +23,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -31,20 +33,18 @@ import java.util.UUID;
 public class I18nService {
 
     private final String tmpFolder = System.getProperty("java.io.tmpdir");
-    private static final int DEFAULT_INDENT_FACTOR = 0;
-    private static final int PRETTY_INDENT_FACTOR = 4;
 
     private final ProjectManager projectManager;
     private final TranslationService translationService;
 
     private final TranslationKeyRepository translationKeyRepository;
 
-    public String exportI18n(int projectOid, String languageCode, I18nTypeEnum i18nType, boolean pretty) {
+    public String exportI18n(int projectOid, String languageCode, I18nTypeEnum i18nType) {
         projectManager.validProjectOid(projectOid);
         translationService.validProjectNeedExistLanguageCode(projectOid, languageCode);
         switch (i18nType) {
             case JSON -> {
-                return exportJson(projectOid, languageCode, pretty);
+                return exportJson(projectOid, languageCode);
             }
             case YAML -> {
                 return exportYaml(projectOid, languageCode);
@@ -60,10 +60,9 @@ public class I18nService {
         int projectOid,
         String languageCode,
         I18nTypeEnum i18nType,
-        boolean pretty,
         HttpServletResponse response) {
 
-        String content = exportI18n(projectOid, languageCode, i18nType, pretty);
+        String content = exportI18n(projectOid, languageCode, i18nType);
         Path filePath = Paths.get(tmpFolder, UUID.randomUUID() + i18nType.getExtension());
         writeToFile(content, filePath);
 
@@ -88,18 +87,22 @@ public class I18nService {
         }
     }
 
-    private String exportJson(int projectOid, String languageCode, boolean pretty) {
-        JSONObject jsonObject = new JSONObject();
+    private String exportJson(int projectOid, String languageCode) {
+        Map<String, Object> map = new LinkedHashMap<>();
         getI18nKeyValue(projectOid, languageCode).forEach(keyValue ->
-            jsonObject.put(keyValue.getKey(), keyValue.getValue())
+            map.put(keyValue.getKey(), keyValue.getValue())
         );
-        return convertToJsonString(jsonObject, pretty);
+        return new PropertiesToJsonConverter().convertFromValuesAsObjectMap(map);
     }
 
     private String exportYaml(int projectOid, String languageCode) {
-        String jsonString = exportJson(projectOid, languageCode, false);
+        String jsonString = exportJson(projectOid, languageCode);
         try {
-            return YamlUtils.toYaml(jsonString);
+            String yamlString = YamlUtils.toYaml(jsonString);
+            if (yamlString.startsWith("---\n")) {
+                yamlString = yamlString.substring(4);
+            }
+            return yamlString;
         } catch (Exception e) {
             throw new InternalServerErrorException("轉換成Yaml失敗(projectOid:%s)".formatted(projectOid), e);
         }
@@ -115,10 +118,6 @@ public class I18nService {
 
     private List<KeyValue> getI18nKeyValue(int projectOid, String languageCode) {
         return translationKeyRepository.getI18nKeyValue(projectOid, languageCode);
-    }
-
-    private String convertToJsonString(JSONObject jsonObject, boolean pretty) {
-        return jsonObject.toString(pretty ? PRETTY_INDENT_FACTOR : DEFAULT_INDENT_FACTOR);
     }
 
     private String getAttachmentContentDisposition(String filename) {
