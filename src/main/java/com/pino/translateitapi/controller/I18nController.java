@@ -3,23 +3,35 @@ package com.pino.translateitapi.controller;
 import com.pino.translateitapi.constant.I18nTypeEnum;
 import com.pino.translateitapi.service.I18nService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.graphql.data.method.annotation.Argument;
-import org.springframework.graphql.data.method.annotation.QueryMapping;
-import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletResponse;
 
 @RequiredArgsConstructor
-@Controller
+@RestController
 public class I18nController {
 
     private final I18nService i18nService;
 
-    @QueryMapping("i18n")
+    @GetMapping("i18n/{projectOid}/{languageCode}/{i18nType}")
     public String i18n(
-        @Argument int projectOid,
-        @Argument String languageCode,
-        @Argument I18nTypeEnum i18nType,
-        @Argument Boolean pretty) {
-        return i18nService.exportI18n(projectOid, languageCode, i18nType, pretty);
+        @PathVariable int projectOid,
+        @PathVariable String languageCode,
+        @PathVariable I18nTypeEnum i18nType) {
+        return i18nService.exportI18n(projectOid, languageCode, i18nType, false);
+    }
+
+    @GetMapping("i18nFile/{projectOid}/{languageCode}/{i18nType}")
+    public void i18nFile(
+        @PathVariable int projectOid,
+        @PathVariable String languageCode,
+        @PathVariable I18nTypeEnum i18nType,
+        @RequestParam Boolean pretty,
+        HttpServletResponse response) {
+        i18nService.exportI18nFile(projectOid, languageCode, i18nType, Boolean.TRUE.equals(pretty), response);
     }
 
 }
