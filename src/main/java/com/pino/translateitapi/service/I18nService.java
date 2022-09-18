@@ -5,6 +5,7 @@ import com.pino.translateitapi.dao.TranslationKeyRepository;
 import com.pino.translateitapi.exception.BadRequestException;
 import com.pino.translateitapi.exception.InternalServerErrorException;
 import com.pino.translateitapi.manager.ProjectManager;
+import com.pino.translateitapi.model.dto.KeyValue;
 import com.pino.translateitapi.util.FileSystemUtils;
 import com.pino.translateitapi.util.YamlUtils;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -46,6 +48,9 @@ public class I18nService {
             }
             case YAML -> {
                 return exportYaml(projectOid, languageCode);
+            }
+            case PROPERTIES -> {
+                return exportProperties(projectOid, languageCode);
             }
             default -> throw new BadRequestException("尚未支援");
         }
@@ -85,9 +90,9 @@ public class I18nService {
 
     private String exportJson(int projectOid, String languageCode, boolean pretty) {
         JSONObject jsonObject = new JSONObject();
-        translationKeyRepository.getI18nKeyValue(projectOid, languageCode).forEach(keyValue -> {
-            jsonObject.put(keyValue.getKey(), keyValue.getValue());
-        });
+        getI18nKeyValue(projectOid, languageCode).forEach(keyValue ->
+            jsonObject.put(keyValue.getKey(), keyValue.getValue())
+        );
         return convertToJsonString(jsonObject, pretty);
     }
 
@@ -98,6 +103,18 @@ public class I18nService {
         } catch (Exception e) {
             throw new InternalServerErrorException("轉換成Yaml失敗(projectOid:%s)".formatted(projectOid), e);
         }
+    }
+
+    private String exportProperties(int projectOid, String languageCode) {
+        StringBuilder stringBuilder = new StringBuilder();
+        getI18nKeyValue(projectOid, languageCode).forEach(keyValue ->
+            stringBuilder.append(keyValue.getKey()).append("=").append(keyValue.getValue()).append("\n")
+        );
+        return stringBuilder.toString();
+    }
+
+    private List<KeyValue> getI18nKeyValue(int projectOid, String languageCode) {
+        return translationKeyRepository.getI18nKeyValue(projectOid, languageCode);
     }
 
     private String convertToJsonString(JSONObject jsonObject, boolean pretty) {
